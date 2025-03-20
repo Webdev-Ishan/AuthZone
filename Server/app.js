@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import cookieparser from "cookie-parser";
+import DBconnect from "./Config/mongodb.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
+DBconnect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
