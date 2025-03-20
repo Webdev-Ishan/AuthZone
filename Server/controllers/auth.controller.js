@@ -16,9 +16,10 @@ export const register = async (req, res) => {
       res.json({ success: false, message: "User Already Exists" });
     }
 
+
     const hashpassword = await bcrypt.hash(password, 10);
 
-    const user = new userModel.create({
+    const user = new userModel({
       name,
       email,
       password: hashpassword,
@@ -47,22 +48,27 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.json({ success: false, message: "email or password is wrong" });
+    return res.json({ success: false, message: "email or password is wrong" });
   }
 
   try {
-    const existuser = await userModel.findOne({ email });
+    const existuser = await userModel.findOne({ email: email });
+
     if (!existuser) {
-      res.json({ success: false, message: "user is not registered" });
+      return res.json({ success: false, message: "user is not registered" });
     }
 
-    const check = await bcrypt.compare(password.user.password);
+    if (!existuser.password) {
+      return res.json({ success: false, message: "user password is missing" });
+    }
+
+    const check = await bcrypt.compare(password, existuser.password);
 
     if (!check) {
-      res.json({ success: false, message: "user is not registered" });
+      return res.json({ success: false, message: "email or password is wrong" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: existuser._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 
@@ -75,9 +81,11 @@ export const login = async (req, res) => {
 
     return res.json({ success: true });
   } catch (error) {
-    res.json({ success: false, message: error.message });
+    return res.json({ success: false, message: error.message });
   }
 };
+
+
 
 export const logout = async (req, res) => {
   try {
