@@ -1,6 +1,7 @@
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import transporter from "../Config/nodemailer.js";
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -15,7 +16,6 @@ export const register = async (req, res) => {
     if (Existuser) {
       res.json({ success: false, message: "User Already Exists" });
     }
-
 
     const hashpassword = await bcrypt.hash(password, 10);
 
@@ -37,6 +37,15 @@ export const register = async (req, res) => {
       maxAge: 1 * 24 * 60 * 60 * 1000,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     });
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Welcome to AuthZone",
+      text: `Welcome to the AuthZone website, Your account has been created successfully with email id: ${email}`,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     return res.json({ success: true });
   } catch (error) {
@@ -65,7 +74,10 @@ export const login = async (req, res) => {
     const check = await bcrypt.compare(password, existuser.password);
 
     if (!check) {
-      return res.json({ success: false, message: "email or password is wrong" });
+      return res.json({
+        success: false,
+        message: "email or password is wrong",
+      });
     }
 
     const token = jwt.sign({ id: existuser._id }, process.env.JWT_SECRET, {
@@ -85,8 +97,6 @@ export const login = async (req, res) => {
   }
 };
 
-
-
 export const logout = async (req, res) => {
   try {
     res.cookie("token", "", {
@@ -101,3 +111,111 @@ export const logout = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+export const sendverifyotp = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    let user = await userModel.findById(userId);
+
+    if (user.isAccountverified) {
+      res.json({ success: false, message: "Account Already Verified" });
+    }
+
+    let otp = String(Math.floor(100000 + Math.random() * 900000));
+    user.verifyotp = otp;
+    user.verifyotpexpiresAt = Date.now() * 24 * 60 * 60 * 1000;
+
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Account Verification OTP",
+      text: `Welcome to the AuthZone website, this is your otp: ${otp}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.json({ success: true, message: "OTP is sent on Email" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const verifyemail = async (req, res) => {
+  const { userId, otp } = req.body;
+
+  if (!userId || !otp) {
+    res.json({ success: false, message: "Details are missing" });
+  }
+
+  try {
+    const user = await userModel.findById(userId);
+
+    if (!user) {
+      res.json({ success: false, message: "User not Found" });
+    }
+
+    if (user.verifyotp === "" || user.verifyotp !== otp) {
+      res.json({ success: false, message: "Invalid OTP" });
+    }
+
+    if (user.verifyotpexpiresAt < Date.now()) {
+      res.json({ success: false, message: "Time out" });
+    }
+
+    user.isAccountverified = true;
+    user.verifyotp = "";
+    user.verifyotpexpiresAt = 0;
+    await user.save();
+
+    return res.json({ success: true, message: "Email Verified successfully" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const isAuthenticated = async (req, res) => {
+  try {
+    return res.json({ success: true, message: "User is Authenticated" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// For sending otp for password reset
+export const sendresetOtp = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.json({ success: false, message: "Email is required" });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.json({ success: false, message: "User not registered" });
+    }
+
+    let otp = String(Math.floor(100000 + Math.random() * 900000));
+    user.resetOtp = otp;
+    user.resetOtpExpiresAt = Date.now() * 24 * 60 * 60 * 1000;
+
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Welcome to the AuthZone website, this is your otp for password reset: ${otp}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.json({ success: true, message: "OTP sent to Email" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
