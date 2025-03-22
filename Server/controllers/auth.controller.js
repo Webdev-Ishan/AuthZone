@@ -143,6 +143,7 @@ export const sendverifyotp = async (req, res) => {
   }
 };
 
+//verify email usingthe otp
 export const verifyemail = async (req, res) => {
   const { userId, otp } = req.body;
 
@@ -176,6 +177,7 @@ export const verifyemail = async (req, res) => {
   }
 };
 
+// check if user is Authenticated
 export const isAuthenticated = async (req, res) => {
   try {
     return res.json({ success: true, message: "User is Authenticated" });
@@ -219,3 +221,41 @@ export const sendresetOtp = async (req, res) => {
   }
 };
 
+// to reset the user password
+export const resetPassword = async (req, res) => {
+  const { email, otp, newpassword } = req.body;
+
+  if (!email || !otp || !newpassword) {
+    return res.json({
+      success: false,
+      message: "Required Credentials are not provided",
+    });
+  }
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: "User is not registered" });
+    }
+
+    if (user.resetOtp === "" || user.resetOtp !== otp) {
+      return res.json({ success: false, message: "Otp is not valid" });
+    }
+
+    if (user.resetOtpExpiresAt < Date.now()) {
+      res.json({ success: false, message: "Time out" });
+    }
+
+    let hashed = await bcrypt.hash(newpassword, 10);
+
+    user.resetPassword = hashed;
+    user.resetOtp = "";
+    user.resetOtpExpiresAt = 0;
+
+    await user.save();
+
+    res.json({ success: true, message: "Password reset successfully" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
