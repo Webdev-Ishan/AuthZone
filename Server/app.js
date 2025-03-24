@@ -12,7 +12,9 @@ DBconnect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser()); // for reading cookies, for sending we do not need it
-app.use(cors({ credentials: true })); // by this we can send cookies
+const allowedorigin = 'http://localhost:5173'
+
+app.use(cors({origin:allowedorigin, credentials: true })); // by this we can send cookies
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);

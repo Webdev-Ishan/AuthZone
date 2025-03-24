@@ -1,12 +1,8 @@
 import userModel from "../models/user.model.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import transporter from "../Config/nodemailer.js";
 
 export const getUserdata = async (req, res) => {
-  const { userId } = req.body;
   try {
-    const user = await userModel.findById(userId);
+    const user = await userModel.findById(req.body.userId); // Extract user ID from req.body.userId
 
     if (!user) {
       return res.json({ success: false, message: "User is not registered" });

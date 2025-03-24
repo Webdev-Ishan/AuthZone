@@ -1,13 +1,66 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import axios from "axios";
 import { assets } from "../src/assets/assets";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/Appcontext";
+import { toast } from "react-toastify";
+
+
+axios.defaults.withCredentials = true;
+
 const Login = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
+  const { backendURL, setisLoggedin, getUserdata } = useContext(AppContext);
   const navigate = useNavigate();
+
+  const submithandler = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (isSignup) {
+        const { data } = await axios.post(backendURL + "/api/auth/register", {
+          name,
+          email,
+          password,
+        });
+
+        // Handle successful signup (e.g., show a success message, redirect, etc.)
+
+        if (data.success) {
+          // Handle successful login (e.g., set user context, redirect, etc.)
+          setisLoggedin(true);
+          getUserdata();
+          navigate("/"); // Redirect to dashboard or another page
+        } else {
+          toast.error("Something went wrong");
+        }
+      } else {
+        const { data } = await axios.post(backendURL + "/api/auth/login", {
+          email,
+          password,
+        });
+
+        // Handle successful signup (e.g., show a success message, redirect, etc.)
+
+        if (data.success) {
+          // Handle successful login (e.g., set user context, redirect, etc.)
+          setisLoggedin(true);
+          getUserdata();
+          navigate("/"); // Redirect to dashboard or another page
+        } else {
+          toast.error("Something went wrong");
+        }
+      }
+    } catch (error) {
+      toast.error(error);
+      // Handle error (e.g., show an error message)
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-5 min-h-screen bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-4">
       <h1>
@@ -23,7 +76,7 @@ const Login = () => {
         <h1 className="text-3xl font-semibold mb-4 text-center">
           {isSignup ? "Create Your Account" : "Login to Your Account"}
         </h1>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={submithandler}>
           {isSignup && (
             <div>
               <label className="block text-white">Name</label>

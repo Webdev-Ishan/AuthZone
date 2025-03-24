@@ -4,10 +4,13 @@ import Login from '../Pages/Login'
 import Home from '../Pages/Home'
 import EmailVerify from "../Pages/EmailVerify";
 import Reset_Password from "../Pages/Reset_Password";
-
+import { ToastContainer } from 'react-toastify';
+import { AppProvider } from "../context/Appcontext";
 const App = () => {
-  return <div>
-
+  return(
+    <AppProvider>
+   <div>
+<ToastContainer/>
 <Routes>
 
 <Route path="/" element={<Home/>}    />
@@ -16,7 +19,9 @@ const App = () => {
 <Route path="/reset-password" element={<Reset_Password/>}    />
 </Routes>
 
-  </div>;
+  </div>
+  </AppProvider>
+  )
 };
 
 export default App;
