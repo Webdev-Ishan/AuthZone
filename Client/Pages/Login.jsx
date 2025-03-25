@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/Appcontext";
 import { toast } from "react-toastify";
 
-
 axios.defaults.withCredentials = true;
 
 const Login = () => {

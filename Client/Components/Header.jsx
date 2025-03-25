@@ -11,7 +11,7 @@ const Header = () => {
         alt=""
         className="w-1/2 max-w-sm h-auto rounded-lg "
       />
-      <h1 className="text-2xl my-5 text-black">
+      <h1 className="text-2xl font-bold my-5 text-black">
         Hey {userData? userData.name:"Developer"} 
         <img
           src={assets.hand_wave}

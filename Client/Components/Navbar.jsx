@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../src/assets/assets";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/Appcontext";
+import { toast } from "react-toastify";
+import axios from 'axios'
+
+axios.default.withcredentials= true
+
 const Navbar = () => {
   const navigate = useNavigate();
+  const { backendURL, setisLoggedin, userData, setuserdata } = useContext(AppContext);
+  const [showOptions, setShowOptions] = useState(false);
+
+
+  const logout = async ()=>{
+
+
+try {
+
+const {data} = await axios.post(backendURL+ '/api/auth/logout')
+data.success && setisLoggedin(false)
+data.success && setuserdata(false)
+navigate('/')
+toast.success("Logout Succesfull")
+  
+} catch (error) {
+  toast.error(error.message)
+}
+
+  }
+
   return (
     <div className="bg-black p-4">
       <nav>
@@ -19,12 +46,40 @@ const Navbar = () => {
               alt=""
             />
           </li>
-          <button
-            onClick={() => navigate("/Login")}
-            className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 flex items-center"
-          >
-            Login <img className="ml-2" src={assets.arrow_icon} alt="" />
-          </button>
+          {userData ? (
+            <div
+              className="relative flex items-center"
+              onClick={() => setShowOptions(!showOptions)}
+      
+            >
+              <div className="bg-blue-600 text-white hover:bg-blue-700 rounded-full w-10 h-10 flex items-center justify-center">
+                {userData.name.charAt(0).toUpperCase()}
+              </div>
+              {showOptions && (
+                <div className="absolute top-12 right-0 bg-white text-black rounded-lg shadow-lg p-2">
+                  <button
+                    className="block px-4 py-2 text-sm hover:bg-gray-200"
+                    onClick={() => navigate("/verify-email")}
+                  >
+                    Verify
+                  </button>
+                  <button
+                    className="block px-4 py-2 text-sm hover:bg-gray-200"
+                    onClick={logout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 flex items-center"
+            >
+              Login <img className="ml-2" src={assets.arrow_icon} alt="" />
+            </button>
+          )}
         </ul>
       </nav>
     </div>
