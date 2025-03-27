@@ -6,6 +6,7 @@ import EmailVerify from "../Pages/EmailVerify";
 import Reset_Password from "../Pages/Reset_Password";
 import { ToastContainer } from 'react-toastify';
 import { AppProvider } from "../context/Appcontext";
+import Product from "../Pages/Product";
 const App = () => {
   return(
     <AppProvider>
@@ -17,6 +18,7 @@ const App = () => {
 <Route path="/Login" element={<Login/>}    />
 <Route path="/verify-email" element={<EmailVerify/>}    />
 <Route path="/reset-password" element={<Reset_Password/>}    />
+<Route path="/Product" element={<Product/>}    />
 </Routes>
 
   </div>
