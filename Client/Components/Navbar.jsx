@@ -23,7 +23,7 @@ const Navbar = () => {
         toast.success(data.message);
       } else {
         console.log(data)
-        toast.error("Something went wrong");
+        toast.error(data.message);
       }
     } catch (error) {
       toast.error(error.message);
