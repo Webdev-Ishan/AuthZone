@@ -2,9 +2,19 @@ import React, { useContext } from "react";
 import { assets } from "../src/assets/assets";
 import { AppContext } from "../context/Appcontext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Header = () => {
-  const navigate= useNavigate()
-  const { userData } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { userData, isLoggedin } = useContext(AppContext);
+
+  const producthandler = () => {
+    if (isLoggedin) {
+      navigate("/Product");
+    } else {
+      toast.error("Login is Required to Proceed");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center p-5 text-center text-gray-100 ">
       <img
@@ -28,7 +38,10 @@ const Header = () => {
         Let's get started with some project tour and we will authorize you in no
         time.
       </p>
-      <button onClick={()=>navigate('/Product')} className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 hover:rounded-2xl duration-300">
+      <button
+        onClick={producthandler}
+        className="mt-5 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 hover:rounded-2xl duration-300"
+      >
         Get Started
       </button>
     </div>

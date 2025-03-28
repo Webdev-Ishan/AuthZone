@@ -1,11 +1,22 @@
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import { assets } from "../src/assets/assets";
 const Product = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-r from-fuchsia-400 to-indigo-500 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <header className="text-center mb-12">
+          <h1>
+            <img
+              onClick={() => navigate("/")}
+              className="text-white text-xl mb-5 hover:text-gray-400"
+              src={assets.logo}
+              alt=""
+            />
+          </h1>
+
           <h1 className="text-4xl font-bold text-white mb-4">
             Our Products & Services
           </h1>
@@ -25,7 +36,9 @@ const Product = () => {
               verification, password reset, and multi-factor authentication.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
 
@@ -37,7 +50,9 @@ const Product = () => {
               Facebook, and GitHub for single sign-on (SSO) capabilities.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
 
@@ -49,7 +64,9 @@ const Product = () => {
               parts of your application.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
 
@@ -61,7 +78,9 @@ const Product = () => {
               recognition for enhanced security.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
 
@@ -73,7 +92,9 @@ const Product = () => {
               limiting to prevent unauthorized access.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
 
@@ -85,7 +106,9 @@ const Product = () => {
               comprehensive analytics dashboard.
             </p>
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-              Learn More
+              <a href="https://www.designrush.com/agency/cybersecurity/trends/user-authentication">
+                Learn More
+              </a>
             </button>
           </div>
         </section>
