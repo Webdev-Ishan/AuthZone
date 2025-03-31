@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      if (isSignup) {
+      if (!isSignup) {
         const { data } = await axios.post(backendURL + "/api/auth/register", {
           name,
           email,
@@ -55,7 +55,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      toast.error(error);
+      toast.error("catch error: "error);
       // Handle error (e.g., show an error message)
     }
   };
