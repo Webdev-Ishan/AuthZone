@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-  const backendURL = import.meta.env.VITE_BACKEND_URL;
+  const backendURL = "https://authzone-backend.onrender.com";
   const [isLoggedin, setisLoggedin] = useState(false);
   const [userData, setuserdata] = useState(false);
 
