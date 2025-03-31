@@ -12,7 +12,7 @@ DBconnect();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieparser()); // for reading cookies, for sending we do not need it
-const allowedorigin = 'http://localhost:5173'
+const allowedorigin = 'https://authzone-client.onrender.com'
 
 app.use(cors({origin:allowedorigin, credentials: true })); // by this we can send cookies
 
