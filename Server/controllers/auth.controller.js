@@ -48,8 +48,9 @@ export const register = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     return res.json({ success: true });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
+  }  catch (error) {
+    console.error("Error during registration:", error.message);
+    return res.json({ success: false, message: error.message });
   }
 };
 
