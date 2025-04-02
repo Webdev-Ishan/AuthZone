@@ -55,7 +55,7 @@ const Login = () => {
         }
       }
     } catch (error) {
-      toast.error("catch error: "error);
+     toast.error("catch error: " + error.message);
       // Handle error (e.g., show an error message)
     }
   };
