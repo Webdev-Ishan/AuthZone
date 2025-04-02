@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      if (!isSignup) {
+      if (isSignup) {
         const { data } = await axios.post(backendURL + "/api/auth/register", {
           name,
           email,
