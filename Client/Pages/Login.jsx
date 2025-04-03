@@ -25,7 +25,7 @@ const Login = () => {
           name,
           email,
           password,
-        });
+        },{ withCredentials: true });
 
         // Handle successful signup (e.g., show a success message, redirect, etc.)
 
