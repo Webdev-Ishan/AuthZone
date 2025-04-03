@@ -25,7 +25,7 @@ const AppProvider = ({ children }) => {
   const getUserdata = async () => {
     try {
       const { data } = await axios.get(backendURL + "/api/user/data");
-      data.success ? setuserdata(data.userData) : toast.error("Data is not sucess);
+      data.success ? setuserdata(data.userData) : console.log(data.cookies);
     } catch (error) {
       toast.error(error.message);
     }
