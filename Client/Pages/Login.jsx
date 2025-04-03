@@ -31,6 +31,7 @@ const Login = () => {
 
         if (data.success) {
           // Handle successful login (e.g., set user context, redirect, etc.)
+          console.log(data);
           setisLoggedin(true);
           getUserdata();
           navigate("/"); // Redirect to dashboard or another page
