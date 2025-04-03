@@ -41,7 +41,7 @@ const Login = () => {
         const { data } = await axios.post(backendURL + "/api/auth/login", {
           email,
           password,
-        });
+        }, { withCredentials: true } );
 
         // Handle successful signup (e.g., show a success message, redirect, etc.)
 
