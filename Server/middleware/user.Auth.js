@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken";
 
 const userAuth = async (req, res, next) => {
   if (!req.cookies.token) {
+    console.log("Cookies:", req.cookies);
+console.log("Received Token:", req.cookies.token);
+
     return res.json({ success: false, message: "Not Authorized my friend " });
   }
 
