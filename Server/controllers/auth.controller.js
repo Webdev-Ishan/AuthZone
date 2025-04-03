@@ -33,7 +33,7 @@ export const register = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      const secure = process.env.NODE_ENV === "production"; // Only set secure to true in production
+      secure = process.env.NODE_ENV === "production"; // Only set secure to true in production
       maxAge: 1 * 24 * 60 * 60 * 1000,
       sameSite: "none", 
     });
